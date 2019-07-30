@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+const program = require('commander');
+const {markPending} = require('../');
+
+program
+  .version('1.0.0')
+  .option('-b, --branch [value]', 'Branch to mark as pending')
+  .parse(process.argv);
+
+if (!program.branch) {
+  console.log("Branch must be specified");
+  process.exit(1);
+}
+
+const onMarked = () => {
+  console.log(`Successfully marked branch ${program.branch} as pending`);
+  process.exit(0);
+}
+
+const onFailure = (e) => {
+  console.log(`Failed to mark branch ${program.branch} with error: ${e.message}`);
+  process.exit(1);
+}
+
+markPending(program.branch).then(onMarked).catch(onFailure);
